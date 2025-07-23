@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import requests
@@ -11,19 +10,19 @@ ODDS_API_KEY = "e1a0d3aca26d43993c899a17c319a9b1"
 st.title("📊 Sports Betting Assistant")
 sport = st.selectbox("Choose a sport", ["NFL", "NBA", "MLB", "WNBA", "NCAAF", "NCAAB"])
 
-# Mapping display name to API key
+# ===== SPORT KEY MAP (FIXED COMMAS AND SPELLING) =====
 sport_key_map = {
     "NFL": "americanfootball_nfl",
     "NBA": "basketball_nba",
     "MLB": "baseball_mlb",
-    "WNBA": "basketball_wnba"
-    "NCAAF": "americanfootbal_ncaaf"
+    "WNBA": "basketball_wnba",
+    "NCAAF": "americanfootball_ncaaf",
     "NCAAB": "basketball_ncaab"
 }
 selected_key = sport_key_map[sport]
 
-# ===== FETCH ODDS FUNCTION =====
-@st.cache_data(show_spinner=False)
+# ===== FETCH ODDS FUNCTION (FIXED CACHE DECORATOR) =====
+@st.cache_data
 def fetch_odds_data(sport_key="americanfootball_nfl"):
     url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds"
     params = {
@@ -80,5 +79,4 @@ else:
     - Time: `{random_row["Commence Time"]}`
     """)
 
-    # ===== Coming Soon: Filters, Confidence, Stats Merge =====
     st.info("Advanced filters and stat-based predictions coming next!")
