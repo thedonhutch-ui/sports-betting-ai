@@ -95,8 +95,7 @@ else:
         - Game: `{random_row["Matchup"]}`
         - Time: `{random_row["Commence Time"]}`
         """)
-
-        # ===== REAL TEAM STATS MERGE =====
+# ===== REAL TEAM STATS MERGE =====
         st.subheader("📊 Team Stats (From CSV)")
 
         stats_files = {
@@ -117,30 +116,33 @@ else:
                 st.info("Stats not found for these teams.")
             else:
                 st.dataframe(filtered_stats)
-              # ========== DOWNLOAD PICK AND STATS ==========
-        st.subheader("⬇️ Download This Pick & Team Stats")
 
-        # Combine pick and stats
-        pick_info = pd.DataFrame([{
-            "Pick": team,
-            "Odds": odds,
-            "Confidence": f"{confidence}%",
-            "Bookmaker": random_row["Bookmaker"],
-            "Matchup": random_row["Matchup"],
-            "Commence Time": random_row["Commence Time"]
-        }])
+                # ========== DOWNLOAD PICK AND STATS ==========
+                st.subheader("⬇️ Download This Pick & Team Stats")
 
-        # Combine both tables for export
-        export_df = pd.concat([pick_info, filtered_stats], axis=0, ignore_index=True)
+                # Combine pick and stats
+                pick_info = pd.DataFrame([{
+                    "Pick": team,
+                    "Odds": odds,
+                    "Confidence": f"{confidence}%",
+                    "Bookmaker": random_row["Bookmaker"],
+                    "Matchup": random_row["Matchup"],
+                    "Commence Time": random_row["Commence Time"]
+                }])
 
-        # Add download button
-        st.download_button(
-            label="📥 Download Pick + Stats (CSV)",
-            data=export_df.to_csv(index=False),
-            file_name="betting_pick_and_team_stats.csv",
-            mime="text/csv"
-        )
+                # Combine both tables for export
+                export_df = pd.concat([pick_info, filtered_stats], axis=0, ignore_index=True)
+
+                # Add download button
+                st.download_button(
+                    label="📥 Download Pick + Stats (CSV)",
+                    data=export_df.to_csv(index=False),
+                    file_name="betting_pick_and_team_stats.csv",
+                    mime="text/csv"
+                )
+
         except FileNotFoundError:
             st.warning("Stats file not found. Please upload the correct CSV.")
         except Exception as e:
             st.error(f"Error loading stats: {e}")
+
