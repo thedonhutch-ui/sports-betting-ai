@@ -33,3 +33,16 @@ filtered_data = sample_data[sample_data["Sport"] == sport]
 
 st.markdown("### 🔍 Filtered AI Picks")
 st.dataframe(filtered_data, use_container_width=True)
+# --- Simulated Odds Data ---
+odds_data = pd.DataFrame({
+    "Matchup": ["Chiefs vs Bills", "Lakers vs Celtics", "Yankees vs Astros", "Aces vs Liberty"],
+    "Moneyline Odds": ["-150", "+130", "-120", "-140"],
+    "Spread": ["-3.5", "+2.5", "-1.5", "-4.0"],
+    "Total O/U": ["48.5", "210.5", "9.5", "180.5"]
+})
+
+# Merge with filtered picks
+merged = pd.merge(filtered_data, odds_data, on="Matchup", how="left")
+
+st.markdown("### 💵 Picks With Simulated Odds")
+st.dataframe(merged, use_container_width=True)
