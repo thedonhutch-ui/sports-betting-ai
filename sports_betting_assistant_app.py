@@ -97,32 +97,28 @@ else:
         """)
 
         # ===== REAL TEAM STATS MERGE =====
-st.subheader("📊 Team Stats (From CSV)")
+        st.subheader("📊 Team Stats (From CSV)")
 
-# Define available stat files
-stats_files = {
-    "NFL": "nfl_team_stats.csv",
-    "NBA": "nba_team_stats.csv",
-    "MLB": "mlb_team_stats.csv",
-    "WNBA": "wnba_team_stats.csv",
-    "NCAAF": "ncaaf_team_stats.csv",
-    "NCAAB": "ncaab_team_stats.csv"
-}
+        stats_files = {
+            "NFL": "nfl_team_stats.csv",
+            "NBA": "nba_team_stats.csv",
+            "MLB": "mlb_team_stats.csv",
+            "WNBA": "wnba_team_stats.csv",
+            "NCAAF": "ncaaf_team_stats.csv",
+            "NCAAB": "ncaab_team_stats.csv"
+        }
 
-try:
-    # Try loading the correct stats file for the selected sport
-    team_stats = pd.read_csv(stats_files[sport])
+        try:
+            team_stats = pd.read_csv(stats_files[sport])
+            selected_teams = [random_row["Home Team"], random_row["Away Team"]]
+            filtered_stats = team_stats[team_stats["Team"].isin(selected_teams)]
 
-    # Filter for teams in the current value pick
-    selected_teams = [random_row["Home Team"], random_row["Away Team"]]
-    filtered_stats = team_stats[team_stats["Team"].isin(selected_teams)]
+            if filtered_stats.empty:
+                st.info("Stats not found for these teams.")
+            else:
+                st.dataframe(filtered_stats)
 
-    if filtered_stats.empty:
-        st.info("Stats not found for these teams.")
-    else:
-        st.dataframe(filtered_stats)
-
-except FileNotFoundError:
-    st.warning("Stats file not found. Please upload the correct CSV.")
-except Exception as e:
-    st.error(f"Error loading stats: {e}")
+        except FileNotFoundError:
+            st.warning("Stats file not found. Please upload the correct CSV.")
+        except Exception as e:
+            st.error(f"Error loading stats: {e}")
