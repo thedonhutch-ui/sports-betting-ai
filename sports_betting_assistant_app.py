@@ -1,11 +1,19 @@
 import requests
 import os
+    
+# Replace with your actual OddsAPI key
+ODDS_API_KEY = "e1a0d3aca26d43993c899a17c319a9b1"
+import streamlit as st
+import pandas as pd
 @st.cache_data(show_spinner=False)
 def fetch_odds_data(sport_key="americanfootball_nfl"):
+    import requests
+    import pandas as pd
+
     url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds"
     params = {
         "regions": "us",
-        "markets": "h2h,spreads,totals",
+        "markets": "h2h",
         "apiKey": ODDS_API_KEY
     }
     response = requests.get(url, params=params)
@@ -30,12 +38,8 @@ def fetch_odds_data(sport_key="americanfootball_nfl"):
                         "Commence Time": game["commence_time"]
                     }
                     data.append(row)
-    return pd.DataFrame(data)
-# Replace with your actual OddsAPI key
-ODDS_API_KEY = "e1a0d3aca26d43993c899a17c319a9b1"
-import streamlit as st
-import pandas as pd
 
+    return pd.DataFrame(data)
 st.set_page_config(page_title="Sports Betting Assistant", layout="wide")
 
 st.title("🎯 Sports Betting Assistant")
