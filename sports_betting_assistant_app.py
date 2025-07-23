@@ -46,3 +46,11 @@ merged = pd.merge(filtered_data, odds_data, on="Matchup", how="left")
 
 st.markdown("### 💵 Picks With Simulated Odds")
 st.dataframe(merged, use_container_width=True)
+# Sidebar pick-type enhanced
+pick_type = st.sidebar.selectbox("Pick Type", ["All", "Moneyline", "Spread", "Over/Under"])
+
+if pick_type != "All":
+    merged = merged[merged["Pick"].str.contains(pick_type.split("/")[0], case=False)]
+
+st.markdown(f"### Filtered Picks: {pick_type}")
+st.dataframe(merged, use_container_width=True)
