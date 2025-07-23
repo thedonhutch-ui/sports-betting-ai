@@ -67,13 +67,7 @@ filtered_data = sample_data[sample_data["Sport"] == sport]
 
 st.markdown("### 🔍 Filtered AI Picks")
 st.dataframe(filtered_data, use_container_width=True)
-# --- Simulated Odds Data ---
-odds_data = pd.DataFrame({
-    "Matchup": ["Chiefs vs Bills", "Lakers vs Celtics", "Yankees vs Astros", "Aces vs Liberty"],
-    "Moneyline Odds": ["-150", "+130", "-120", "-140"],
-    "Spread": ["-3.5", "+2.5", "-1.5", "-4.0"],
-    "Total O/U": ["48.5", "210.5", "9.5", "180.5"]
-})
+
 
 # Merge with filtered picks
 merged = pd.merge(filtered_data, odds_data, on="Matchup", how="left")
@@ -88,3 +82,19 @@ if pick_type != "All":
 
 st.markdown(f"### Filtered Picks: {pick_type}")
 st.dataframe(merged, use_container_width=True)
+st.markdown("### 🔴 Live Odds Feed")
+
+sport_key_map = {
+    "NFL": "americanfootball_nfl",
+    "NBA": "basketball_nba",
+    "MLB": "baseball_mlb",
+    "WNBA": "basketball_wnba"
+}
+
+selected_key = sport_key_map[sport]
+odds_df = fetch_odds_data(selected_key)
+
+if not odds_df.empty:
+    st.dataframe(odds_df, use_container_width=True)
+else:
+    st.info("No live odds available or API call limit reached.")
