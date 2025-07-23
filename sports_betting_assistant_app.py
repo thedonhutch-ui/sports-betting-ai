@@ -1,6 +1,36 @@
 import requests
 import os
+@st.cache_data(show_spinner=False)
+def fetch_odds_data(sport_key="americanfootball_nfl"):
+    url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds"
+    params = {
+        "regions": "us",
+        "markets": "h2h,spreads,totals",
+        "apiKey": ODDS_API_KEY
+    }
+    response = requests.get(url, params=params)
 
+    if response.status_code != 200:
+        st.error("Failed to fetch odds data.")
+        return pd.DataFrame()
+
+    games = response.json()
+    data = []
+    for game in games:
+        matchup = f"{game['home_team']} vs {game['away_team']}"
+        for bookmaker in game.get("bookmakers", []):
+            for market in bookmaker.get("markets", []):
+                if market["key"] == "h2h":
+                    outcomes = market["outcomes"]
+                    row = {
+                        "Matchup": matchup,
+                        "Bookmaker": bookmaker["title"],
+                        "Moneyline_Home": outcomes[0]["price"],
+                        "Moneyline_Away": outcomes[1]["price"],
+                        "Commence Time": game["commence_time"]
+                    }
+                    data.append(row)
+    return pd.DataFrame(data)
 # Replace with your actual OddsAPI key
 ODDS_API_KEY = e1a0d3aca26d43993c899a17c319a9b1
 import streamlit as st
