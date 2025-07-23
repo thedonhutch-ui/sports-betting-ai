@@ -9,7 +9,7 @@ ODDS_API_KEY = "e1a0d3aca26d43993c899a17c319a9b1"
 
 # ===== SPORT SELECTION =====
 st.title("📊 Sports Betting Assistant")
-sport = st.selectbox("Choose a sport", ["NFL", "NBA", "MLB", "WNBA"])
+sport = st.selectbox("Choose a sport", ["NFL", "NBA", "MLB", "WNBA", "NCAAF", "NCAAB"])
 
 # Mapping display name to API key
 sport_key_map = {
@@ -17,6 +17,8 @@ sport_key_map = {
     "NBA": "basketball_nba",
     "MLB": "baseball_mlb",
     "WNBA": "basketball_wnba"
+    "NCAAF": "americanfootbal_ncaaf"
+    "NCAAB": "basketball_ncaab"
 }
 selected_key = sport_key_map[sport]
 
