@@ -32,7 +32,7 @@ def fetch_odds_data(sport_key="americanfootball_nfl"):
                     data.append(row)
     return pd.DataFrame(data)
 # Replace with your actual OddsAPI key
-ODDS_API_KEY = e1a0d3aca26d43993c899a17c319a9b1
+ODDS_API_KEY = "e1a0d3aca26d43993c899a17c319a9b1"
 import streamlit as st
 import pandas as pd
 
