@@ -2,7 +2,7 @@ import requests
 import os
 
 # Replace with your actual OddsAPI key
-ODDS_API_KEY = "your_api_key_here"
+ODDS_API_KEY = e1a0d3aca26d43993c899a17c319a9b1
 import streamlit as st
 import pandas as pd
 
