@@ -95,7 +95,8 @@ else:
         - Game: `{random_row["Matchup"]}`
         - Time: `{random_row["Commence Time"]}`
         """)
-# ===== REAL TEAM STATS MERGE =====
+
+        # ===== REAL TEAM STATS MERGE =====
         st.subheader("📊 Team Stats (From CSV)")
 
         stats_files = {
@@ -117,10 +118,46 @@ else:
             else:
                 st.dataframe(filtered_stats)
 
+                # ========== ADVANCED EXPLANATION ==========
+                st.subheader("🤖 Why This Pick?")
+                team_stat_row = filtered_stats[filtered_stats["Team"] == team].iloc[0]
+                opponent = random_row["Away Team"] if team == random_row["Home Team"] else random_row["Home Team"]
+                opponent_stats = team_stats[team_stats["Team"] == opponent]
+
+                if not opponent_stats.empty:
+                    opponent_row = opponent_stats.iloc[0]
+
+                    if sport in ["NFL", "NCAAF"]:
+                        explanation = f"""
+                        ### 🧠 Why We Picked {team}
+                        - {team} scores **{team_stat_row['PPG']} PPG** vs {opponent}'s **{opponent_row['PPG']}**
+                        - Total offense: **{team_stat_row['Yards/Game']}** vs **{opponent_row['Yards/Game']}**
+                        - Defense: {team} is #{team_stat_row['Defense Rank']}, {opponent} is #{opponent_row['Defense Rank']}
+                        - Odds: `{odds}`, Confidence: `{confidence}%`
+                        """
+                    elif sport in ["NBA", "WNBA", "NCAAB"]:
+                        explanation = f"""
+                        ### 🧠 Why We Picked {team}
+                        - {team} averages **{team_stat_row['PPG']} PPG**, {opponent} averages **{opponent_row['PPG']}**
+                        - Rebound control: **{team_stat_row.get('RPG', 'N/A')} RPG** vs **{opponent_row.get('RPG', 'N/A')} RPG**
+                        - Defense rank: #{team_stat_row.get('Defense Rank', 'N/A')} vs #{opponent_row.get('Defense Rank', 'N/A')}
+                        - Odds: `{odds}`, Confidence: `{confidence}%`
+                        """
+                    elif sport == "MLB":
+                        explanation = f"""
+                        ### 🧠 Why We Picked {team}
+                        - Batting Avg: **{team_stat_row.get('AVG', 'N/A')}** vs **{opponent_row.get('AVG', 'N/A')}**
+                        - ERA: **{team_stat_row.get('ERA', 'N/A')}** vs **{opponent_row.get('ERA', 'N/A')}**
+                        - Run differential and defense rank are similar.
+                        - Odds: `{odds}`, Confidence: `{confidence}%`
+                        """
+                    else:
+                        explanation = "Stats available but not yet configured for this sport."
+
+                    st.markdown(explanation)
+
                 # ========== DOWNLOAD PICK AND STATS ==========
                 st.subheader("⬇️ Download This Pick & Team Stats")
-
-                # Combine pick and stats
                 pick_info = pd.DataFrame([{
                     "Pick": team,
                     "Odds": odds,
@@ -130,10 +167,8 @@ else:
                     "Commence Time": random_row["Commence Time"]
                 }])
 
-                # Combine both tables for export
                 export_df = pd.concat([pick_info, filtered_stats], axis=0, ignore_index=True)
 
-                # Add download button
                 st.download_button(
                     label="📥 Download Pick + Stats (CSV)",
                     data=export_df.to_csv(index=False),
@@ -145,4 +180,5 @@ else:
             st.warning("Stats file not found. Please upload the correct CSV.")
         except Exception as e:
             st.error(f"Error loading stats: {e}")
+            
 
