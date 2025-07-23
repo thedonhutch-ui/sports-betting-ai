@@ -20,3 +20,16 @@ st.warning("Team stats and game info will appear here.")
 
 st.markdown("### 💰 Live Betting Odds (Add API next)")
 st.error("No odds API connected yet. Add OddsAPI or similar.")
+# --- Sample Data ---
+sample_data = pd.DataFrame({
+    "Sport": ["NFL", "NBA", "MLB", "WNBA", "NFL", "NBA"],
+    "Matchup": ["Chiefs vs Bills", "Lakers vs Celtics", "Yankees vs Astros", "Aces vs Liberty", "Eagles vs 49ers", "Bucks vs Heat"],
+    "Pick": ["Chiefs -3.5", "Lakers ML", "Astros Over 7.5", "Aces -4.0", "Eagles +2.5", "Heat +5.5"],
+    "Confidence": [0.78, 0.65, 0.72, 0.81, 0.61, 0.69]
+})
+
+# --- Filtered View ---
+filtered_data = sample_data[sample_data["Sport"] == sport]
+
+st.markdown("### 🔍 Filtered AI Picks")
+st.dataframe(filtered_data, use_container_width=True)
