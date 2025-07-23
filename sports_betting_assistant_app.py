@@ -96,14 +96,33 @@ else:
         - Time: `{random_row["Commence Time"]}`
         """)
 
-        # ========== FAKE TEAM STATS (TO BE REPLACED) ==========
-        st.subheader("📊 Mock Team Stats (Coming Soon)")
-        fake_stats = pd.DataFrame({
-            "Team": [random_row["Home Team"], random_row["Away Team"]],
-            "Win %": [round(random.uniform(0.4, 0.75), 2) for _ in range(2)],
-            "Avg PPG": [random.randint(20, 120) for _ in range(2)],
-            "Last 5 Record": [f"{random.randint(2, 5)}-{random.randint(0, 3)}" for _ in range(2)]
-        })
-        st.dataframe(fake_stats)
+        # ===== REAL TEAM STATS MERGE =====
+st.subheader("📊 Team Stats (From CSV)")
+
+# Define available stat files
+stats_files = {
+    "NFL": "nfl_team_stats.csv",
+    "NBA": "nba_team_stats.csv",
+    "MLB": "mlb_team_stats.csv",
+    "WNBA": "wnba_team_stats.csv",
+    "NCAAF": "ncaaf_team_stats.csv",
+    "NCAAB": "ncaab_team_stats.csv"
+}
+
+try:
+    # Try loading the correct stats file for the selected sport
+    team_stats = pd.read_csv(stats_files[sport])
+
+    # Filter for teams in the current value pick
+    selected_teams = [random_row["Home Team"], random_row["Away Team"]]
+    filtered_stats = team_stats[team_stats["Team"].isin(selected_teams)]
+
+    if filtered_stats.empty:
+        st.info("Stats not found for these teams.")
     else:
-        st.info("No matchups match your filters.")
+        st.dataframe(filtered_stats)
+
+except FileNotFoundError:
+    st.warning("Stats file not found. Please upload the correct CSV.")
+except Exception as e:
+    st.error(f"Error loading stats: {e}")
