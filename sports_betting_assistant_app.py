@@ -10,7 +10,16 @@ st.title("📊 Sports Betting Assistant")
 
 sport = st.selectbox("Choose a sport", ["NFL", "NBA", "MLB", "WNBA", "NCAAF", "NCAAB"])
 
-sport_key_map = { "NFL": "americanfootball_nfl", "NBA": "basketball_nba", "MLB": "baseball_mlb", "WNBA": "basketball_wnba", "NCAAF": "americanfootball_ncaaf", "NCAAB": "basketball_ncaab" } selected_key = sport_key_map[sport]
+sport_key_map = {
+    "NFL": "americanfootball_nfl",
+    "NBA": "basketball_nba",
+    "MLB": "baseball_mlb",
+    "WNBA": "basketball_wnba",
+    "NCAAF": "americanfootball_ncaaf",
+    "NCAAB": "basketball_ncaab"
+}
+
+selected_key = sport_key_map[sport]
 
 @st.cache_data def fetch_odds_data(sport_key): url = f"https://api.the-odds-api.com/v4/sports/{sport_key}/odds" params = { "regions": "us", "markets": "h2h", "apiKey": ODDS_API_KEY } response = requests.get(url, params=params) if response.status_code != 200: st.error("Failed to fetch odds data.") return pd.DataFrame()
 
