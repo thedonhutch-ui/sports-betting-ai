@@ -116,7 +116,53 @@ else:
                     file_name="value_picks_with_stats.csv",
                     mime="text/csv"
                 )
+# ========== TEAM STATS SECTION ==========
+    st.subheader("📊 Team Stats (From CSV)")
 
+    stats_files = {
+        "NFL": "nfl_team_stats.csv",
+        "NBA": "nba_team_stats.csv",
+        "MLB": "mlb_team_stats.csv",
+        "WNBA": "wnba_team_stats.csv",
+        "NCAAF": "ncaaf_team_stats.csv",
+        "NCAAB": "ncaab_team_stats.csv"
+    }
+
+    try:
+        stats = pd.read_csv(stats_files[sport])
+        selected_teams = list(set(picks_df["Home Team"]) | set(picks_df["Away Team"]))
+        team_stats = stats[stats["Team"].isin(selected_teams)]
+
+        if team_stats.empty:
+            st.info("Stats not found for selected teams.")
+        else:
+            st.dataframe(team_stats)
+
+            # ========== STATS VISUALIZATION ==========
+            st.subheader("📊 Stat Comparison Chart")
+            melted = team_stats.melt(id_vars="Team", var_name="Stat", value_name="Value")
+            chart = alt.Chart(melted).mark_bar().encode(
+                x=alt.X('Stat:N', title="Stat Category"),
+                y=alt.Y('Value:Q', title="Stat Value"),
+                color='Team:N',
+                column='Team:N'
+            ).properties(width=120)
+            st.altair_chart(chart, use_container_width=True)
+
+            # ========== COMBINED DOWNLOAD ==========
+            st.subheader("⬇️ Download Picks + Stats")
+            download_df = picks_df.merge(stats, how="left", left_on="Pick", right_on="Team")
+            st.download_button(
+                label="📥 Download (CSV)",
+                data=download_df.to_csv(index=False),
+                file_name="value_picks_with_stats.csv",
+                mime="text/csv"
+            )
+
+    except FileNotFoundError:
+        st.warning("Stats file not found. Please upload the correct CSV.")
+    except Exception as e:
+        st.error(f"Error loading stats: {e}")
         except FileNotFoundError:
             st.warning("Stats file not found. Please upload the correct CSV.")
         except Exception as e:
