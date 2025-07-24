@@ -1,5 +1,8 @@
-
-import streamlit as st import pandas as pd import requests import random import altair as alt
+import streamlit as st
+import pandas as pd
+import requests
+import random
+import altair as alt
 
 ODDS_API_KEY = "e1a0d3aca26d43993c899a17c319a9b1"
 
