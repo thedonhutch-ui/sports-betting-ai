@@ -180,28 +180,6 @@ else:
             st.error(f"Error loading stats: {e}")
 
 
-✅ The full version of your Sports Betting Assistant app has been rewritten and uploaded with:
-
-✅ Confidence-based filtering (Options A, B, C)
-
-✅ Multiple pick logic (via slider)
-
-✅ Team stats visualizations
-
-✅ CSV download for picks + stats
-
-
-You can now upload this sports_betting_assistant_app.py to your Streamlit Cloud or local project folder and run the app.
-
-Let me know when you're ready to:
-
-1. Upload it.
-
-
-2. Test that stats + odds + charts show correctly.
-
-
-3. Add next features (e.g., alerts, favorites, betting ROI tracker).
 
 
 
