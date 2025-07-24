@@ -6,7 +6,9 @@ import altair as alt
 
 ODDS_API_KEY = "e1a0d3aca26d43993c899a17c319a9b1"
 
-st.title("📊 Sports Betting Assistant") sport = st.selectbox("Choose a sport", ["NFL", "NBA", "MLB", "WNBA", "NCAAF", "NCAAB"])
+st.title("📊 Sports Betting Assistant")
+
+sport = st.selectbox("Choose a sport", ["NFL", "NBA", "MLB", "WNBA", "NCAAF", "NCAAB"])
 
 sport_key_map = { "NFL": "americanfootball_nfl", "NBA": "basketball_nba", "MLB": "baseball_mlb", "WNBA": "basketball_wnba", "NCAAF": "americanfootball_ncaaf", "NCAAB": "basketball_ncaab" } selected_key = sport_key_map[sport]
 
