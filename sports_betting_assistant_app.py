@@ -8,13 +8,14 @@ ODDS_API_KEY = "e1a0d3aca26d43993c899a17c319a9b1"
 GOOGLE_SHEET_URL = "https://docs.google.com/spreadsheets/d/10qHJPF7tD7eSl8sRcTDrnzpL60a1Sk8rBuv5J19z1JI/export?format=csv&gid="
 
 SPORTS = {
-    "NFL": {"key": "americanfootball_nfl", "gid": "0"},
-    "NBA": {"key": "basketball_nba", "gid": "937168354"},
-    "MLB": {"key": "baseball_mlb", "gid": "1435091640"},
-    "WNBA": {"key": "basketball_wnba", "gid": "547520480"},
-    "NCAAF": {"key": "americanfootball_ncaaf", "gid": "1492097116"},
-    "NCAAB": {"key": "basketball_ncaab", "gid": "1710944234"},
+    "NFL":   {"key": "americanfootball_nfl",   "gid": "0"},
+    "WNBA":  {"key": "basketball_wnba",        "gid": "1354086104"},
+    "NBA":   {"key": "basketball_nba",         "gid": "1494548643"},
+    "NCAAF": {"key": "americanfootball_ncaaf", "gid": "1807990318"},
+    "NCAAB": {"key": "basketball_ncaab",       "gid": "783040797"},
+    "MLB":   {"key": "baseball_mlb",           "gid": "1111623914"},
 }
+
 
 st.set_page_config(page_title="Sports Betting Assistant", layout="wide")
 st.title("📊 Sports Betting Assistant")
