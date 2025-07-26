@@ -62,7 +62,7 @@ def fetch_team_stats(gid):
 
 odds_df = fetch_odds(sport_key)
 stats_df = fetch_team_stats(gid)
-
+st.write(">>> Loaded Stat Columns:", stats_df.columns.tolist())
 if odds_df.empty:
     st.warning("No odds data available yet.")
 else:
