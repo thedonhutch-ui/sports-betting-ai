@@ -127,23 +127,24 @@ else:
     st.warning("⚠️ Google Sheet is empty or missing 'Team' column.")
         # ✅ Team stat comparison
         st.subheader("📈 Team Stat Comparison")
+        if stats_df.empty:
+            st.error("Stats failed to load from Google Sheets.")
+        else:
+            # ✅ Normalize names
+            picks_df["Pick_clean"] = picks_df["Pick"].str.lower().str.replace(r'\W+', '', regex=True)
+            stats_df["Team_clean"] = stats_df["Team"].str.lower().str.replace(r'\W+', '', regex=True)
 
-        # ✅ Clean both team names from picks and stats
-        picks_df["Pick_clean"] = picks_df["Pick"].str.lower().str.strip()
-        if not stats_df.empty and "Team" in stats_df.columns:
-            stats_df["Team_clean"] = stats_df["Team"].astype(str).str.lower().str.strip()
-
-            # ✅ Show what's being compared
+            # ✅ DEBUG output
             st.write("🔎 Picks (from API):", picks_df["Pick_clean"].unique().tolist())
             st.write("📋 Teams (from Google Sheet):", stats_df["Team_clean"].unique().tolist())
 
-            selected_teams = picks_df["Pick_clean"].unique()
-            team_stats = stats_df[stats_df["Team_clean"].isin(selected_teams)]
+            # ✅ Match by cleaned name
+            matching_stats = stats_df[stats_df["Team_clean"].isin(picks_df["Pick_clean"])]
 
-            if not team_stats.empty:
-                st.dataframe(team_stats)
+            if not matching_stats.empty:
+                st.dataframe(matching_stats)
 
-                melted = team_stats.melt(id_vars="Team", var_name="Stat", value_name="Value")
+                melted = matching_stats.melt(id_vars="Team", var_name="Stat", value_name="Value")
                 chart = alt.Chart(melted).mark_bar().encode(
                     x=alt.X('Stat:N', title="Stat"),
                     y=alt.Y('Value:Q'),
@@ -154,11 +155,9 @@ else:
 
                 st.download_button(
                     "📥 Download Picks + Stats",
-                    data=picks_df.merge(team_stats, left_on="Pick_clean", right_on="Team_clean").to_csv(index=False),
+                    data=picks_df.merge(stats_df, left_on="Pick_clean", right_on="Team_clean").to_csv(index=False),
                     file_name="value_picks_with_stats.csv",
                     mime="text/csv"
                 )
             else:
                 st.info("No matching stats found for suggested picks.")
-        else:
-            st.warning("⚠️ Google Sheet is empty or missing 'Team' column.")
