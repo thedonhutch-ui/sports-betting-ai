@@ -133,6 +133,7 @@ if stats_df.empty:
 else:
     # Clean team names for better matching
     picks_df["Pick_clean"] = picks_df["Pick"].str.lower().str.replace(r'\W+', '', regex=True)
+    st.write("🧪 Raw Google Sheet columns:", stats_df.columns.tolist())
     stats_df["Team_clean"] = stats_df["Team"].str.lower().str.replace(r'\W+', '', regex=True)
 
     # Debug info to verify matching
