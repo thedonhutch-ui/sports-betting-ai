@@ -115,7 +115,16 @@ else:
 
         picks_df = pd.DataFrame(picks).sort_values("Confidence", ascending=False)
         st.dataframe(picks_df)
+          # ✅ Clean both team names from picks and stats
+picks_df["Pick_clean"] = picks_df["Pick"].str.lower().str.strip()
+if not stats_df.empty and "Team" in stats_df.columns:
+    stats_df["Team_clean"] = stats_df["Team"].astype(str).str.lower().str.strip()
 
+    # ✅ Show what's being compared
+    st.write("🔎 Picks (from API):", picks_df["Pick_clean"].unique().tolist())
+    st.write("📋 Teams (from Google Sheet):", stats_df["Team_clean"].unique().tolist())
+else:
+    st.warning("⚠️ Google Sheet is empty or missing 'Team' column.")
         # ✅ Team stat comparison
         st.subheader("📈 Team Stat Comparison")
 
