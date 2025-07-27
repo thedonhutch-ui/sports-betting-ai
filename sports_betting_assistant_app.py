@@ -125,39 +125,42 @@ if not stats_df.empty and "Team" in stats_df.columns:
     st.write("📋 Teams (from Google Sheet):", stats_df["Team_clean"].unique().tolist())
 else:
     st.warning("⚠️ Google Sheet is empty or missing 'Team' column.")
-        # ✅ Team stat comparison
-        st.subheader("📈 Team Stat Comparison")
-        if stats_df.empty:
-            st.error("Stats failed to load from Google Sheets.")
-        else:
-            # ✅ Normalize names
-            picks_df["Pick_clean"] = picks_df["Pick"].str.lower().str.replace(r'\W+', '', regex=True)
-            stats_df["Team_clean"] = stats_df["Team"].str.lower().str.replace(r'\W+', '', regex=True)
+        # ✅ Team Stat Comparison Section
+st.subheader("📈 Team Stat Comparison")
 
-            # ✅ DEBUG output
-            st.write("🔎 Picks (from API):", picks_df["Pick_clean"].unique().tolist())
-            st.write("📋 Teams (from Google Sheet):", stats_df["Team_clean"].unique().tolist())
+if stats_df.empty:
+    st.error("Stats failed to load from Google Sheets.")
+else:
+    # Clean team names for better matching
+    picks_df["Pick_clean"] = picks_df["Pick"].str.lower().str.replace(r'\W+', '', regex=True)
+    stats_df["Team_clean"] = stats_df["Team"].str.lower().str.replace(r'\W+', '', regex=True)
 
-            # ✅ Match by cleaned name
-            matching_stats = stats_df[stats_df["Team_clean"].isin(picks_df["Pick_clean"])]
+    # Debug info to verify matching
+    st.write("🔎 Picks (from API):", picks_df["Pick_clean"].unique().tolist())
+    st.write("📋 Teams (from Google Sheet):", stats_df["Team_clean"].unique().tolist())
 
-            if not matching_stats.empty:
-                st.dataframe(matching_stats)
+    # Filter matching stats
+    matching_stats = stats_df[stats_df["Team_clean"].isin(picks_df["Pick_clean"])]
 
-                melted = matching_stats.melt(id_vars="Team", var_name="Stat", value_name="Value")
-                chart = alt.Chart(melted).mark_bar().encode(
-                    x=alt.X('Stat:N', title="Stat"),
-                    y=alt.Y('Value:Q'),
-                    color='Team:N',
-                    column='Team:N'
-                ).properties(width=150)
-                st.altair_chart(chart, use_container_width=True)
+    if not matching_stats.empty:
+        st.dataframe(matching_stats)
 
-                st.download_button(
-                    "📥 Download Picks + Stats",
-                    data=picks_df.merge(stats_df, left_on="Pick_clean", right_on="Team_clean").to_csv(index=False),
-                    file_name="value_picks_with_stats.csv",
-                    mime="text/csv"
-                )
-            else:
-                st.info("No matching stats found for suggested picks.")
+        # Melt and chart the stats
+        melted = matching_stats.melt(id_vars="Team", var_name="Stat", value_name="Value")
+        chart = alt.Chart(melted).mark_bar().encode(
+            x=alt.X('Stat:N', title="Stat"),
+            y=alt.Y('Value:Q'),
+            color='Team:N',
+            column='Team:N'
+        ).properties(width=150)
+        st.altair_chart(chart, use_container_width=True)
+
+        # Download button
+        st.download_button(
+            "📥 Download Picks + Stats",
+            data=picks_df.merge(stats_df, left_on="Pick_clean", right_on="Team_clean").to_csv(index=False),
+            file_name="value_picks_with_stats.csv",
+            mime="text/csv"
+        )
+    else:
+        st.info("No matching stats found for suggested picks.")
