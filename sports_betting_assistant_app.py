@@ -127,6 +127,9 @@ else:
                 return str(name).strip().lower()
 
             picks_df["Pick_clean"] = picks_df["Pick"].apply(clean_name)
+            # ✅ DEBUG: Display cleaned team names from picks and stats
+st.write("🔎 Picks (from API):", picks_df["Pick_clean"].unique().tolist())
+st.write("📋 Teams (from Google Sheet):", stats_df["Team_clean"].unique().tolist())
             stats_df["Team_clean"] = stats_df["Team"].apply(clean_name)
 
             selected_teams = picks_df["Pick_clean"].unique()
